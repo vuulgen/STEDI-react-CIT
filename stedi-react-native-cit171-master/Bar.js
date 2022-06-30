@@ -4,7 +4,7 @@ import AppName from "./AppName";
 import Setting from "./Setting";
 
 function Bar(props) {
-    console.log('Logged In User: '+props.loggedInUser,);
+    console.log("logged in User: " + props.loggedInUser)
     return(
         <View style={styles.bar}>
             <AppName />

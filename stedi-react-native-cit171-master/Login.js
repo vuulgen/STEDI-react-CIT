@@ -1,33 +1,36 @@
 import {useState} from "react";
 import { TouchableOpacity, SafeAreaView, StyleSheet, TextInput, Text } from "react-native";
 
+
 const sendText = async (phoneNumber) => {
   // using fetch do a POST to https://dev.stedi.me/twofactorlogin
-  await fetch("https://dev.stedi.me/twofactorlogin/" + phoneNumber, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/text"
-  }
-});
-  const LoninResponeText = await LoginResponse.text();
-  console.log('Login Response',loginResponseText);
-}
-
-const getToken = async({phoneNumber,otp}) =>{
-  const loginResponse=await fetch('https://dev.stedi.me/twofactorlogin/',{
+  const loginResponse = await fetch('https://dev.stedi.me/twofactorlogin/'+phoneNumber,{
     method: 'POST',
     headers:{
       'content-type':'application/text'
-    },
-    body:{
-      phoneNumber,
-      oneTimePassword
-    }
-  });
-}
+    
+  }})
+  const loginResponseText = await loginResponse.text()
+  console.log(loginResponseText);//print the response
+  };
+
+const getToken = async({otp, phoneNumber}) =>{
+  console.log(phoneNumber)
+  console.log(otp)
+  const loginResponse = await fetch('https://dev.stedi.me/twofactorlogin',{
+    method: 'POST',
+    headers:{
+      'content-type':'application/text'
+    
+  }, body:{
+    phoneNumber,
+    otp
+  }
+});
   const token = await loginResponse.text();
-  console.log(token);
-  
+  console.log(token)
+}
+
 const Login = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState(null);
@@ -40,6 +43,12 @@ const Login = () => {
         value={phoneNumber}
         placeholder="801-555-1212"
       />
+      <TouchableOpacity
+        style={styles.button}
+        onPress={()=>{sendText(phoneNumber)}}
+      >
+        <Text>Get OTP</Text>
+      </TouchableOpacity>
       <TextInput
         style={styles.input}
         onChangeText={setOtp}
@@ -48,15 +57,10 @@ const Login = () => {
         keyboardType="numeric"
         secureTextEntry={true}
       />
+      
       <TouchableOpacity
         style={styles.button}
-        onPress={()=>{sendText(phoneNumber)}}
-      >
-        <Text>Get OTP</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={()=>{sendText(phoneNumber)}}
+        onPress={()=>{getToken({otp, phoneNumber})}}
       >
         <Text>Login</Text>
       </TouchableOpacity>
